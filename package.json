@@ -69,7 +69,7 @@
     ],
     "collectCoverageFrom": [
       "src/**/*.{ts}",
-      "!src/config.ts",
+      "!src/config/config.ts",
       "!src/main(.hmr)?.ts"
     ],
     "testMatch": [

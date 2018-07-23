@@ -14,13 +14,16 @@ import Song from 'Song';
 @Injectable()
 export default class DiskFactory implements AudioFactory {
 
-    constructor(
-        private readonly _config: any,
-        private readonly _disk_source: DiskSource,
-    ) { }
+    private readonly config: any;
+    private readonly disk_source: DiskSource;
+
+    public constructor(config, disk_source) {
+        this.config = config.get('adapters.disk');
+        this.disk_source = disk_source;
+    }
 
     public getSong(file_path: string): Promise<Song> {
-        return new Promise((resolve, reject) => ffmpeg.ffprobe(this._config.songs_directory + path.sep + file_path, (err, stream_metadata) => {
+        return new Promise((resolve, reject) => ffmpeg.ffprobe(this.config.songs_directory + path.sep + file_path, (err, stream_metadata) => {
             if (err) {
                 reject(err);
             } else {
@@ -28,7 +31,7 @@ export default class DiskFactory implements AudioFactory {
                 resolve(new Song(
                     file_path,
                     stream_metadata.streams[0].duration,
-                    this._disk_source,
+                    this.disk_source,
                     stream_metadata.streams[0].sample_rate,
                     id3_data.title || undefined,
                     id3_data.artist || undefined,

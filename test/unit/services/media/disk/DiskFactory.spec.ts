@@ -2,7 +2,8 @@ import DiskFactory from '../../../../../src/services/media/disk/DiskFactory';
 import DiskSource from '../../../../../src/services/media/disk/DiskSource';
 import AudioFactory from '../../../../../src/services/media/AudioFactory';
 import Song from '../../../../../src/Song';
-import { Readable } from 'stream';
+import { Configuration } from '../../../../../src/config/config.service';
+
 // tslint:disable-next-line:no-var-requires
 const ffmpeg = require('fluent-ffmpeg');
 
@@ -10,9 +11,15 @@ describe('Disk factory', () => {
     let disk_factory: AudioFactory;
 
     beforeEach(() => {
-        disk_factory = new DiskFactory({
-            songs_directory: 'C:\\some\\random\\directory',
-        }, new DiskSource());
+        const config = new Configuration({
+            adapters: {
+                disk: {
+                    songs_directory: 'C:\\some\\random\\directory',
+                },
+            },
+        });
+
+        disk_factory = new DiskFactory(config, new DiskSource());
     });
 
     it('provides correctly constructed songs', () => {
